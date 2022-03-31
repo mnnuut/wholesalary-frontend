@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import {
   Navbar,
+  Alert,
   OverlayTrigger,
   Tooltip,
   FormControl,
@@ -22,8 +23,10 @@ import { connect } from "react-redux";
 import {
   getAuth,
   signOut,
+  firebase
 } from "firebase/auth";
 import { auth } from "../../firebase";
+import { async } from "@firebase/util";
 
 export const getStaticProps = async () => {
   const res = await fetch("http://localhost:8080/api/products");
@@ -35,6 +38,7 @@ export const getStaticProps = async () => {
 };
 
 
+
 function index(props) {
   const [userInfo, setUserInfo] = useState(null);
   useEffect(() => {
@@ -42,27 +46,30 @@ function index(props) {
     setUserInfo(item);
   }, []);
 
-//   const logout = async () => {
-//     const [currentUser, setCurrentUser] = useState("");
-//     const auth = getAuth();
-//     signOut(auth).then(() => {
-//       window.localStorage.clear("retailerInfo");
-//       setCurrentUser(false)
-//     }).catch((error) => {
-//       console.error('> error : ', error);
-//     });
-//     console.log(currentUser);
-//   // function logOut({ ≈ }) {
-//   //   window.localStorage.clear("retailerInfo");
-//   //   setCurrentUser(false);
-//   // }; 
-
-//   // if (currentUser !== true) {
-//   //   const router = useRouter();
-//   //   router.push("/");
-//   // }
-// };
-
+  const logout = async () => {
+    try {
+      // const user = await signInWithEmailAndPassword(
+      //   auth,
+      //   loginEmail,
+      //   loginPassword
+      // );
+      // console.log(user);
+      // const currentUserIdentity = newData.find(
+      //   (item) => item.email === loginEmail
+      // );
+      // console.log(currentUserIdentity);
+      // setUserIdentity(currentUserIdentity);
+      // window.localStorage.setItem(
+      //   "wholesalerInfo",
+      //   JSON.stringify(currentUserIdentity)
+      // );
+      // setCurrentUser(true);
+      console.log("Test logout function");
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+  console.log("hello")
   return (
     <>
       <Navbar bg="light" expand="sm" className="py-4 px-2">
@@ -93,8 +100,23 @@ function index(props) {
                 className="ms-4"
                 style={{ width: "30px", height: "30px" }}
               />
-
-              {/* <button onClick={logout} style={{ marginTop: 0 }}>Sign out</button> */}
+            {/* <Button
+            className="w-100 text-capitalize"
+            variant="dark"
+            type="button"
+            onClick={logout}
+            >
+            S
+          </Button> */}
+              {/* <button type="button" onClick={logout} style={{ marginTop: 0 }}>Sign Out</button> */}
+              <Link href={"/retailer/quotation-list"}>
+                <button
+                  className="py-2 px-6 btn mb-0 text-capitalize"
+                  style={{ background: "#FFFFFF", border: "1px solid #535252" }}
+                >
+                  Go to Order
+                </button>
+              </Link>
             </div>
           </Navbar.Collapse>
         </Container>
@@ -226,7 +248,7 @@ function index(props) {
                   }}
                 >
                   <Card.Title>{data.Productname.substring(0,25)}...</Card.Title>
-                 
+
 
                   <span>
                     <FontAwesomeIcon

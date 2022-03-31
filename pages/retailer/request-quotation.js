@@ -74,7 +74,8 @@ function requestQuotation() {
   }-${today.getFullYear()} `;
   var time = `${today.getHours()}:${today.getMinutes()}`;
 
-  const dateTime = `${date} ${time}`;
+  // const dateTime = `${date} ${time}`;
+  const dateTime = today;
   const orderID = Math.floor(Math.random() * 1000000);
   const creatorID = uid;
   const allStoreID = countLists.map((i) => i.storeID);

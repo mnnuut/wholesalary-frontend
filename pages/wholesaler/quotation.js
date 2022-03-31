@@ -109,7 +109,7 @@ function quotation() {
               >
                 <tr>
                   <td className="p-3">{data.orderID}</td>
-                  <td>{data.dateTime} </td>
+                  <td>{data.dateTime}</td>
                   <td>{data.userName}</td>
                   <td className="text-center">
                     {data.status === "Quotation successful" ? (
