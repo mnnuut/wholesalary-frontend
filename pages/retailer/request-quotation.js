@@ -28,9 +28,6 @@ function requestQuotation() {
         setNewData(data);
         setLoading(false);
       });
-
-    // setUserInfo(item);
-    // setCreatorID(item.id);
   }, [uid, refresh]);
 
   useEffect(() => {
@@ -66,7 +63,6 @@ function requestQuotation() {
       return el.storeName === arr[index - 1].storeName;
     }
   });
-  // console.log("check is samestore", isSameStore);
 
   var today = new Date();
   var date = `${today.getDate()}-${
@@ -75,15 +71,13 @@ function requestQuotation() {
   var time = `${today.getHours()}:${today.getMinutes()}`;
 
   // const dateTime = `${date} ${time}`;
-  const dateTime = today;
+  const dateTime = today.toLocaleString({ timeZone: 'UTC'});
   const orderID = Math.floor(Math.random() * 1000000);
   const creatorID = uid;
   const allStoreID = countLists.map((i) => i.storeID);
   const storeID = allStoreID[0];
   const allStoreName = countLists.map((i) => i.storeName);
   const storeName = allStoreName[0];
-
-  // console.log("this is store id", storeID);
 
   const requestQuotation = async () => {
     if (isSameStore === false) {
