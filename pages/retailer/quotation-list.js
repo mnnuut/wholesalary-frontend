@@ -152,7 +152,7 @@ function requestQuotation({ setOrderinfo }) {
                     <tr>
                     <th className="col-2 p-3">Order ID</th>
                     <th className="col-3">Order Date/Time</th>
-                    <th className="col-2">Customer</th>
+                    <th className="col-2">Store Name</th>
                     <th className="col-5 text-center">Status</th>
                     <th className="col-2 text-end p-3">Total</th>
                     <th className="col-2 text-end p-3"></th>
@@ -181,7 +181,7 @@ function requestQuotation({ setOrderinfo }) {
                                   cursor: "pointer",
                                 }}
                               >
-                                Confirm
+                                Shipped
                               </span>
                             </Link>
                           }

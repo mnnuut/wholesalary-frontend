@@ -6,6 +6,7 @@ import { connect } from "react-redux";
 import { useRouter } from "next/router";
 import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
 import Link from "next/link";
+import { connectStorageEmulator } from "firebase/storage";
 
 function requestQuotation() {
   const [selectedLists, setSelectedLists] = useState([]);
@@ -80,62 +81,69 @@ function requestQuotation() {
   const storeName = allStoreName[0];
 
   const requestQuotation = async () => {
-    if (isSameStore === false) {
-      alert("Every quotation requests must be from the same store ");
-    } else {
-      const response = await fetch(
-        "http://localhost:8080/api/wholesaler-quotation-request/" + storeID,
-        {
-          method: "POST",
-          body: JSON.stringify({
-            dateTime,
-            orderID,
-            countLists,
-            creatorID,
-            total,
-            status: "Wait for quotation detail",
-            // name,
-            storeID,
-            storeName,
-            userName,
-          }),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      const secondResponse = await fetch(
-        "http://localhost:8080/api/retailer-quotation-list/" + uid,
-        {
-          method: "POST",
-          body: JSON.stringify({
-            dateTime,
-            orderID,
-            countLists,
-            creatorID,
-            total,
-            status: "Waiting",
-            // name,
-            storeID,
-            storeName,
-            userName,
-          }),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      for (let i = 0; i < updateIdLists.length; i++) {
-        let id = updateIdLists;
-        const deleteOnRequest = await fetch(
-          `http://localhost:8080/api/delete-quotation-request/${uid}/${id[i]}`,
+    if (storeID != null){
+      alert(storeID);
+      if (isSameStore === false) {
+        alert("Every quotation requests must be from the same store ");
+      } else {
+        const response = await fetch(
+          "http://localhost:8080/api/wholesaler-quotation-request/" + storeID,
           {
-            method: "DELETE",
+            method: "POST",
+            body: JSON.stringify({
+              dateTime,
+              orderID,
+              countLists,
+              creatorID,
+              total,
+              status: "Wait for quotation detail",
+              // name,
+              storeID,
+              storeName,
+              userName,
+            }),
+            headers: {
+              "Content-Type": "application/json",
+            },
           }
         );
+        console.log(response)
+        const secondResponse = await fetch(
+          "http://localhost:8080/api/retailer-quotation-list/" + uid,
+          {
+            method: "POST",
+            body: JSON.stringify({
+              dateTime,
+              orderID,
+              countLists,
+              creatorID,
+              total,
+              status: "Waiting",
+              // name,
+              storeID,
+              storeName,
+              userName,
+            }),
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        for (let i = 0; i < updateIdLists.length; i++) {
+          let id = updateIdLists;
+          const deleteOnRequest = await fetch(
+            `http://localhost:8080/api/delete-quotation-request/${uid}/${id[i]}`,
+            {
+              method: "DELETE",
+            }
+          );
+        }
+        router.push("/retailer/request-quotation-list");
       }
-      router.push("/retailer/request-quotation-list");
+    } else {
+      alert("StoreID is Null")
     }
+
   };
   const deleteItem = async (id) => {
     const response = await fetch(

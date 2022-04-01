@@ -8,7 +8,7 @@ import { useState } from "react";
 import { stars } from "../stars";
 
 function recommendedProduct({ products }) {
-  console.log(stars);
+  // console.log(stars);
   let itemsToRender;
   if (products) {
     products.map((data) => {

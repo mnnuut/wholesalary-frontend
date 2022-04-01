@@ -58,10 +58,15 @@ function productInfo({ product }) {
   const [storeID, setStoreID] = useState(product.StoreID);
   const [productName, setProductName] = useState(product.Productname);
   const [quantity, setQuantity] = useState(0);
+  const [stock,setStock] = useState(product.CountInStock);
+
   const requestQuotation = async () => {
-    if (quantity < 24 && quantity != null) {
+    if (quantity < 24 || quantity == null) {
       alert("Quantity must more then or equal 24");
-    } else {
+    } else if (quantity > stock){
+      alert(`Now there is only ${stock}`);
+    }
+    else {
       const response = await fetch(
         "http://localhost:8080/api/retailer-addproducts",
         {
@@ -244,7 +249,14 @@ function productInfo({ product }) {
                         24 is minimum order(unit) of product
                       </span>
                     </>
-                  ) : null}
+                  ) : quantity > product.CountInStock ? (
+                    <>
+                      <span className="ms-2">
+                        Now there is only {product.CountInStock}
+                      </span>
+                    </>
+                  )
+                   : null }
                   <div className="d-flex mt-3">
                     <input
                       className="px-4 py-1 text-white"

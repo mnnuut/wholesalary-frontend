@@ -23,12 +23,14 @@ function requestQuotation({ setOrderinfo }) {
 
   useEffect(() => {
     setLoading(true);
-    fetch("http://localhost:8080/api/retailer-get-quotation-lists/" + uid)
+    if( uid != null){
+      fetch("http://localhost:8080/api/retailer-get-quotation-lists/" + uid)
       .then((res) => res.json())
       .then((data) => {
         setNewData(data);
         setLoading(false);
       });
+    }
   }, [uid, refresh]);
   // console.log(newData);
   useEffect(() => {

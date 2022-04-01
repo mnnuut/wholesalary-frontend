@@ -38,14 +38,15 @@ export const getStaticProps = async () => {
 };
 
 
-
 function index(props) {
   const [userInfo, setUserInfo] = useState(null);
   useEffect(() => {
     var item = JSON.parse(window.localStorage.getItem("retailerInfo"));
     setUserInfo(item);
   }, []);
-
+  // var localitem = JSON.parse(window.localStorage.getItem("retailerInfo"));
+  // console.log("TESTTEST")
+  // console.log(localitem,"  local")
   const logout = async () => {
     try {
       // const user = await signInWithEmailAndPassword(
@@ -121,9 +122,6 @@ function index(props) {
           </Navbar.Collapse>
         </Container>
       </Navbar>
-      {/* <p>{props.id}</p>
-      <p>{props.name}</p>
-      <p>{props.email}</p> */}
       <Carousel fade className="">
         <Carousel.Item className="max-height-vh-60">
           <img
