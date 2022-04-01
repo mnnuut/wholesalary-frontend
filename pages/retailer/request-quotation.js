@@ -6,7 +6,8 @@ import { connect } from "react-redux";
 import { useRouter } from "next/router";
 import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
 import Link from "next/link";
-import { connectStorageEmulator } from "firebase/storage";
+// import { connectStorageEmulator } from "firebase/storage";
+// import router from "next/router";
 
 function requestQuotation() {
   const [selectedLists, setSelectedLists] = useState([]);
@@ -16,8 +17,9 @@ function requestQuotation() {
   const [uid, setUid] = useState(null);
   const [userName, setuserName] = useState(null);
   const [refresh, setRefresh] = useState(false);
-  // console.log(uid, userName);
-  // const userName = name;
+  const [quantity, setQuantity] = useState(null);
+  const [cartid, setChangeid] = useState(null);
+
   useEffect(() => {
     var item = JSON.parse(window.localStorage.getItem("retailerInfo"));
     setUid(item.id);
@@ -30,7 +32,8 @@ function requestQuotation() {
         setLoading(false);
       });
   }, [uid, refresh]);
-
+  useEffect(() => {
+  }, [quantity]);
   useEffect(() => {
     setSelectedLists(
       newData.map((d) => {
@@ -80,6 +83,25 @@ function requestQuotation() {
   const allStoreName = countLists.map((i) => i.storeName);
   const storeName = allStoreName[0];
 
+  const updateCartAmount = async (a) => {
+    const updateres = await fetch(
+      "http://localhost:8080/api/retailer-update-cart/" + uid +"/" +cartid,
+      {
+        method : "PUT",
+        body: JSON.stringify({
+          quantity : quantity
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    )
+    setTimeout(function() {
+      router.reload(window.location.pathname)
+   }, 1000);
+
+    // router.push("/retailer/request-quotation");
+  }
   const requestQuotation = async () => {
     if (storeID != null){
       alert(storeID);
@@ -97,7 +119,6 @@ function requestQuotation() {
               creatorID,
               total,
               status: "Wait for quotation detail",
-              // name,
               storeID,
               storeName,
               userName,
@@ -154,6 +175,7 @@ function requestQuotation() {
     );
     setRefresh(!refresh);
   };
+
   return (
     <>
       <div className="w-90 mx-auto">
@@ -266,7 +288,23 @@ function requestQuotation() {
 
                         <td>{d.storeName}</td>
                         <td>{d.price}</td>
-                        <td>{d.quantity}</td>
+                        <td>
+                        <input
+                            style={{
+                              border: "0.5px solid #979797",
+                              borderRadius: "2px",
+                            }}
+                            className="w-50 mb-2"
+                            onChange={
+                              (e) => {
+                                setQuantity(e.target.value + "0")
+                                setChangeid(d.id)
+                                updateCartAmount()
+                              }
+                            }
+                            defaultValue = {d.quantity}
+                        />
+                        </td>
                         <td>{d.price * d.quantity}</td>
                         <td>
                           <FontAwesomeIcon
@@ -285,7 +323,6 @@ function requestQuotation() {
                       </tr>
                     </tbody>
                   ))}
-                  {/* </tbody> */}
                 </table>
               </div>
             </Col>
