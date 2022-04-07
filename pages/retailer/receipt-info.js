@@ -12,8 +12,6 @@ function receiptInfo({ data }) {
       productItems.push(...data.data.countLists[i].countLists);
     }
   }
-  // console.log("this is countlists", data.data.countLists);
-  // console.log("this is productlists", productItems);
 
   let itemsToRender;
   if (data.data.countLists) {
@@ -98,7 +96,7 @@ function receiptInfo({ data }) {
               className="py-2 px-6 btn mb-0 text-capitalize  "
               style={{ background: "#FFFFFF", border: "1px solid #535252" }}
             >
-              Go to Homepage
+              Go to homepage
             </button>
           </Link>
         </div>

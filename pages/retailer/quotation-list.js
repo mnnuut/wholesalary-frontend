@@ -48,6 +48,7 @@ function requestQuotation({ setOrderinfo }) {
       })
     );
   }, [newData]);
+
   const countLists = selectedLists.filter((e) => e.select === true);
   console.log(selectedLists);
   const updateIdLists = countLists.map((el) => el.id);
@@ -75,9 +76,8 @@ function requestQuotation({ setOrderinfo }) {
   });
 
   var today = new Date();
-  var date = `${today.getDate()}-${
-    today.getMonth() + 1
-  }-${today.getFullYear()} `;
+  var date = `${today.getDate()}-${today.getMonth() + 1
+    }-${today.getFullYear()} `;
   var time = `${today.getHours()}:${today.getMinutes()}`;
 
   const dateTime = `${date} ${time}`;
@@ -150,12 +150,12 @@ function requestQuotation({ setOrderinfo }) {
                     }}
                   >
                     <tr>
-                    <th className="col-2 p-3">Order ID</th>
-                    <th className="col-3">Order Date/Time</th>
-                    <th className="col-2">Store Name</th>
-                    <th className="col-5 text-center">Status</th>
-                    <th className="col-2 text-end p-3">Total</th>
-                    <th className="col-2 text-end p-3"></th>
+                      <th className="col-2 p-3">Order ID</th>
+                      <th className="col-3">Order Date/Time</th>
+                      <th className="col-2">Store Name</th>
+                      <th className="col-5 text-center">Status</th>
+                      <th className="col-2 text-end p-3">Total</th>
+                      <th className="col-2 text-end p-3"></th>
                     </tr>
                   </thead>
                   {selectedLists.map((d, i) => (
@@ -177,11 +177,33 @@ function requestQuotation({ setOrderinfo }) {
                               <span
                                 className="py-1 px-3"
                                 style={{
-                                  backgroundColor: "#1BD27E",
+                                  // backgroundColor: "#1BD27E",
                                   cursor: "pointer",
                                 }}
                               >
-                                Shipped
+                                {d.status === "Confirm" ? (
+                                  <span
+                                    className="py-1 px-3"
+                                    style={{ backgroundColor: "#1BD27E" }}
+                                  >
+                                    Confirm Quotation
+                                  </span>
+                                ) : d.status === "Shipped" ? (
+                                  <span
+                                    className="py-1 px-3"
+                                    style={{ backgroundColor: "#1BD27E" }}
+                                  >
+                                    Shipped
+                                  </span>
+                                ) : (
+                                  <span
+                                    className="py-1 px-3"
+                                    style={{ backgroundColor: "#F6C927" }}
+                                  >
+                                    Waiting for confirm payment
+                                  </span>
+                                )}
+
                               </span>
                             </Link>
                           }

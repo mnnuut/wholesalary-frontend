@@ -112,6 +112,46 @@ function quotationRequest() {
     );
     router.push("/wholesaler/quotation");
   };
+  // Reject quotation
+  const updateQuotationRejectStatus = async () => {
+    const secondUid = newData.storeID;
+    const secondId = updateID;
+    const secondResponse = await fetch(
+      `http://localhost:8080/api/wholesaler-update-status/${secondUid}/${secondId}`,
+      {
+        method: "PUT",
+        body: JSON.stringify({
+          status: "Quotation Reject",
+          total: totalPrice,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const uid = newData.creatorID;
+    const id = transectionID.id;
+    const response = await fetch(
+      `http://localhost:8080/api/retailer-update-status/${uid}/${id}`,
+      {
+        method: "PUT",
+        body: JSON.stringify({
+          status: "Reject",
+          shippingPrice,
+          shippingInfo,
+          expextedDelivery,
+          expireDate,
+          note,
+          offeredPrice,
+          total: totalPrice,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    router.push("/wholesaler/quotation");
+  };
   // console.log(id, newData.storeID);
   return (
     <>
@@ -121,8 +161,15 @@ function quotationRequest() {
         </h1>
       </div>
       <div className="w-90 mx-auto container">
-        <div>
-          <p> QUO #{newData.orderID}</p>
+      <div className="d-flex justify-content-between">
+          <p> QUO {newData.orderID}</p>
+          <button
+            className="py-1 px-5 text-white btn mb-0 text-capitalize"
+            style={{background: "#535252",
+            borderRadius: "2px", }}
+            onClick={updateQuotationRejectStatus}>
+          Reject Quotation
+          </button>
         </div>
         <hr />
         <div className="row">

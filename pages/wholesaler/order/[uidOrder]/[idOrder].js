@@ -9,6 +9,9 @@ function payment() {
 
   const [newData, setNewData] = useState([]);
   const [isLoading, setLoading] = useState(false);
+  const [uid, setUid] = useState(null)
+  const [itemid, setItemID] = useState(null)
+  // const [selectedLists, setSelectedLists] = useState([])
 
   useEffect(() => {
     setLoading(true);
@@ -18,16 +21,39 @@ function payment() {
       .then((res) => res.json())
       .then((data) => {
         setNewData(data);
-
+        this.state({
+          itemid: data.status
+        })
         setLoading(false);
       });
   }, []);
+
+  useEffect(() => {
+      if(newData.hasOwnProperty('data')) {
+          setUid(newData['data']['creatorID'])
+          setItemID(newData['data']['updateIdLists'][0])
+      }
+  }, [newData]);
+
   const confirmOrder = async () => {
     const update = await fetch(
       `http://localhost:8080/api/wholesaler-orderupdate-status/${uidOrder}/${idOrder}`,
       {
         method: "PUT",
-        body: JSON.stringify({ status: "Shipped" }),
+        body: JSON.stringify({ status: "Wait for confirm payment" }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    const updateretaielr = await fetch(
+      `http://localhost:8080/api/retailer-update-status/${uid}/${itemid}`,
+      {
+        method: "PUT",
+        body: JSON.stringify({
+          status: "Shipped",
+        }),
         headers: {
           "Content-Type": "application/json",
         },
@@ -35,6 +61,7 @@ function payment() {
     );
     router.push("/wholesaler/order");
   };
+
   return (
     <>
       <div className="text-center">

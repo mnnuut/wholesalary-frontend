@@ -6,9 +6,10 @@ import { faStarHalf } from "@fortawesome/free-solid-svg-icons";
 import { faStar as starThin } from "@fortawesome/free-regular-svg-icons";
 import { useState } from "react";
 import { stars } from "../stars";
+import Link from "next/link";
 
 function recommendedProduct({ products }) {
-  // console.log(stars);
+  console.log(stars);
   let itemsToRender;
   if (products) {
     products.map((data) => {
@@ -68,6 +69,7 @@ function recommendedProduct({ products }) {
         <Row>
           {products.slice(0, 16).map((data) => (
             <Col lg="3" key={data.id} className="mb-3">
+              <Link href={"/login"}>
               <Card>
                 <Card.Img
                   variant="top"
@@ -108,6 +110,7 @@ function recommendedProduct({ products }) {
                   </span>
                 </Card.Body>
               </Card>
+              </Link>
             </Col>
           ))}
         </Row>

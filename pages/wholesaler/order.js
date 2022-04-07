@@ -22,7 +22,6 @@ function order() {
   useEffect(() => {
     setLoading(true);
     fetch("http://localhost:8080/api/orders/" + uid)
-      // fetch("http://localhost:8080/api/quotations/" + id)
       .then((res) => res.json())
       .then((data) => {
         setNewData(data);

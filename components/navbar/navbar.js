@@ -18,7 +18,7 @@ function navbar() {
           <Navbar.Brand href="#">wholesalery</Navbar.Brand>
           <Navbar.Toggle aria-controls="navbarScroll" />
           <Navbar.Collapse id="navbarScroll">
-            <Form className="d-flex">
+            {/* <Form className="d-flex">
               <FormControl
                 style={{ width: "600px" }}
                 type="search"
@@ -26,7 +26,7 @@ function navbar() {
                 className=""
                 aria-label="Search"
               />
-            </Form>
+            </Form> */}
             <div className="ms-auto py-auto">
               {/* <Login /> */}
               <Button

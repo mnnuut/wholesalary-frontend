@@ -23,14 +23,12 @@ function requestQuotation({ setOrderinfo }) {
 
   useEffect(() => {
     setLoading(true);
-    if( uid != null){
-      fetch("http://localhost:8080/api/retailer-get-quotation-lists/" + uid)
+    fetch("http://localhost:8080/api/retailer-get-quotation-lists/" + uid)
       .then((res) => res.json())
       .then((data) => {
         setNewData(data);
         setLoading(false);
       });
-    }
   }, [uid, refresh]);
   // console.log(newData);
   useEffect(() => {
@@ -77,6 +75,22 @@ function requestQuotation({ setOrderinfo }) {
     }
   });
 
+  const isnullStore = countLists.every((index) => {
+    if (index === null) {
+      return true;
+    } else {
+      return false;
+    }
+  });
+
+  const isWaitingStatus = countLists.every((el, index, arr) => {
+    if (el.status === "Waiting") {
+      return true;
+    } else {
+      return false;
+    }
+  });
+
   var today = new Date();
   var date = `${today.getDate()}-${
     today.getMonth() + 1
@@ -88,9 +102,7 @@ function requestQuotation({ setOrderinfo }) {
   const creatorID = uid;
   const allStoreID = countLists.map((i) => i.storeID);
   const storeID = allStoreID[0];
-  // const shippingInfo = countLists;
-  // console.log("this is store id", shippingInfo);
-  // console.log(countLists);
+
   const deleteItem = async (id) => {
     const response = await fetch(
       `http://localhost:8080/api/delete-quotation-request-list/${uid}/${id}`,
@@ -104,7 +116,8 @@ function requestQuotation({ setOrderinfo }) {
   const order = async () => {
     if (isSameStore === false) {
       alert("Every quotation requests must be from the same store");
-    } else if (isSameStatus === false) {
+    }
+    else if (isSameStatus === false) {
       alert(
         "You can only process a transection on quotation list with status CONFIRM"
       );
@@ -119,16 +132,6 @@ function requestQuotation({ setOrderinfo }) {
         updateIdLists,
       };
       setOrderinfo(datas);
-      // for (let i = 0; i < updateIdLists.length; i++) {
-      //   let id = updateIdLists;
-      //   const deleteOnRequest = await fetch(
-      //     `http://localhost:8080/api/delete-quotation-request-list/${uid}/${id[i]}`,
-      //     {
-      //       method: "DELETE",
-      //     }
-      //   );
-      // }
-      // console.log(setOrderinfo);
       router.push("/retailer/payment-information");
     }
   };
@@ -227,14 +230,22 @@ function requestQuotation({ setOrderinfo }) {
                             className="ms-3"
                             onChange={(event) => {
                               let checked = event.target.checked;
+                              if (d.status === "Waiting"){
+                                alert("This request was in process, please wait for confirm before select to order.");
+                              }
+                              if (d.status === "Reject"){
+                                alert("This request was reject.");
+                              }
+
+                              else{
                               setSelectedLists(
                                 selectedLists.map((data) => {
-                                  if (d.id === data.id) {
+                                 if (d.id === data.id && d.status ==="Confirm") {
                                     data.select = checked;
                                   }
                                   return data;
                                 })
-                              );
+                              );}
                             }}
                             type="checkbox"
                             checked={d.select}
@@ -254,7 +265,7 @@ function requestQuotation({ setOrderinfo }) {
                             >
                               Waiting
                             </span>
-                          ) : (
+                          ) : d.status === "Confirm" ? (
                             <Link href={`/retailer/${uid}/${d.id.trim()}`}>
                               <span
                                 className="py-1 px-3"
@@ -266,10 +277,23 @@ function requestQuotation({ setOrderinfo }) {
                                 Confirm
                               </span>
                             </Link>
+                          )
+                          : (
+                            <Link href={`/retailer/${uid}/${d.id.trim()}`}>
+                              <span
+                                className="py-1 px-3"
+                                style={{
+                                  backgroundColor: "#d16456",
+                                  cursor: "pointer",
+                                }}
+                              >
+                                Reject
+                              </span>
+                            </Link>
                           )}
                         </td>
 
-                        <td>
+                        {d.status === "Confirm" || d.status === "Reject" ?(<td>
                           <FontAwesomeIcon
                             className="pe-1"
                             icon={faTrashCan}
@@ -282,7 +306,7 @@ function requestQuotation({ setOrderinfo }) {
                               deleteItem(d.id);
                             }}
                           />
-                        </td>
+                        </td>):(null)}
                       </tr>
                     </tbody>
                   ))}
@@ -312,14 +336,22 @@ function requestQuotation({ setOrderinfo }) {
                     <span>{total}</span>
                   </div>
                 </div>
-                <button
+               
+                {isnullStore === true ?(
+                   <button disabled
+                   className="btn btn-dark text-capitalize">
+                   Order
+                 </button>
+                )
+                : ( <button
                   className="btn btn-dark text-capitalize"
                   onClick={() => {
                     order();
                   }}
                 >
                   Order
-                </button>
+                </button>)}
+              
               </div>
             </Col>
           </Row>

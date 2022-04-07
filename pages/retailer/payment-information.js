@@ -16,10 +16,12 @@ function payment({ data, setConfirmOrder }) {
   // const uid = id;
   // const userName = name;
   const [imageUrl, setImageUrl] = useState(null);
-  const [transferAmount, setTransferAmount] = useState(0);
+  // const [transferAmount, setTransferAmount] = useState(0);
   const [transferMethod, setTransferMethod] = useState("");
   const [uploadStatus, setUploadStatus] = useState(false);
   const [updateIdLists, setUpdateIdLists] = useState(data.updateIdLists);
+
+  const [itemid, setId] = useState(null)
   // console.log("this is ifli", updateIdLists);
 
   // datatime
@@ -41,6 +43,7 @@ function payment({ data, setConfirmOrder }) {
   if (data.countLists) {
     const allID = data.countLists.map((i) => i.id);
     id = allID[0];
+
   }
   // console.log("id is ", id);
 
@@ -54,11 +57,33 @@ function payment({ data, setConfirmOrder }) {
     )
       .then((res) => res.json())
       .then((data) => {
+        setId(id)
         setNewData(data);
         setLoading(false);
       });
   }, [uid]);
-  console.log(newData);
+  // console.log(newData);
+
+  let itemsToRender;
+  if (newData.countLists) {
+    itemsToRender = newData.countLists.map((item) => {
+      console.log(item)
+      return (
+        <tbody key={item.id}>
+          {/* <tr>
+            <td className="p-3">{item.productName}</td>
+            <td>{item.price}</td>
+            <td>{item.quantity}</td>
+            <td className="text-center">{item.price * item.quantity}</td>
+          </tr> */}
+          <div className="d-flex justify-content-between">
+          <span>{item.productName}&nbsp;&nbsp;&nbsp;</span>
+          <span>{item.quantity}</span>
+          </div>
+        </tbody>
+      );
+    });
+  }
 
   // const [image, setImage] = useState(null);
   const getFiles = (e) => {
@@ -99,14 +124,15 @@ function payment({ data, setConfirmOrder }) {
   const orderID = Math.floor(Math.random() * 1000000);
 
   const storeID = data.storeID;
-  console.log("id is", storeID);
 
   const total = data.total;
   const shippingInfo = newData.shippingInfo;
   const customerName = userName;
-  const confirmPayment = async () => {
+  console.log(id,'Hello')
+  const confirmPayment = async (id) => {
+    console.log(id)
     let datas = {
-      transferAmount,
+      // transferAmount,
       transferMethod,
       data,
       storeName,
@@ -116,12 +142,25 @@ function payment({ data, setConfirmOrder }) {
       orderID,
     };
     setConfirmOrder(datas);
+    console.log(uid)
+    const retailerresponse = await fetch(
+      `http://localhost:8080/api/retailer-update-status/${uid}/${itemid}`,
+      {
+        method: "PUT",
+        body: JSON.stringify({
+          status: "Wait for confirm payment",
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
     const response = await fetch(
       "http://localhost:8080/api/wholesaler-order-request/" + storeID,
       {
         method: "POST",
         body: JSON.stringify({
-          transferAmount,
+          // transferAmount,
           transferMethod,
           data,
           dateTimeInfo,
@@ -137,15 +176,16 @@ function payment({ data, setConfirmOrder }) {
         },
       }
     );
-    for (let i = 0; i < updateIdLists.length; i++) {
-      let id = updateIdLists;
-      const deleteOnRequest = await fetch(
-        `http://localhost:8080/api/delete-quotation-request-list/${uid}/${id[i]}`,
-        {
-          method: "DELETE",
-        }
-      );
-    }
+
+    // for (let i = 0; i < updateIdLists.length; i++) {
+    //   let id = updateIdLists;
+    //   const deleteOnRequest = await fetch(
+    //     `http://localhost:8080/api/delete-quotation-request-list/${uid}/${id[i]}`,
+    //     {
+    //       method: "DELETE",
+    //     }
+    //   );
+    // }
 
     router.push("/retailer/receipt-info");
   };
@@ -176,6 +216,7 @@ function payment({ data, setConfirmOrder }) {
             >
               <h4>Price summary</h4>
               <hr />
+              {itemsToRender}
               <div className="d-flex justify-content-between">
                 <span>Total:</span>
                 <span>{data.total}</span>
@@ -250,14 +291,14 @@ function payment({ data, setConfirmOrder }) {
                 </div>
               </div>
 
-              <div className="d-flex justify-content-between mb-2">
+              {/* <div className="d-flex justify-content-between mb-2">
                 <p>Transfer amount:</p>
                 <input
                   style={{ height: "30px" }}
                   type="number"
                   onChange={(e) => setTransferAmount(e.target.value)}
                 />
-              </div>
+              </div> */}
               <div className="d-flex justify-content-between mb-2">
                 <p className="">Date/Time:</p>
                 {/* <input type="text" value={date} className="d-none" /> */}

@@ -106,7 +106,7 @@ function quotationRequest() {
                 <th className="col-7 p-3">Item Description</th>
                 <th className="col-3">Price</th>
                 <th className="col-3">Quantity</th>
-                <th className="col-3 text-center">Suptotal</th>
+                <th className="col-3 text-center">Subtotal</th>
                 {/* <th className="col-2 text-end p-3">Subtotal</th> */}
               </tr>
             </thead>

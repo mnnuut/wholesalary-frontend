@@ -17,17 +17,17 @@ function quotation() {
     var item = JSON.parse(window.localStorage.getItem("wholesalerInfo"));
     setUid(item.id);
     setUserName(item.name);
-  }, [uid,refresh]);
+  }, [uid, refresh]);
   useEffect(() => {
-    if (uid != null){
-    setLoading(true);
-    fetch("http://localhost:8080/api/quotations/" + uid)
-      .then((res) => res.json())
-      .then((data) => {
-        setNewData(data);
-        setLoading(false);
-      }
-      );
+    if (uid != null) {
+      setLoading(true);
+      fetch("http://localhost:8080/api/quotations/" + uid)
+        .then((res) => res.json())
+        .then((data) => {
+          setNewData(data);
+          setLoading(false);
+        }
+        );
     }
   }, [uid, refresh]);
   const deleteItem = async (id) => {
@@ -97,7 +97,9 @@ function quotation() {
               <th className="col-2 text-end p-3"></th>
             </tr>
           </thead>
+
           {newData.map((data) => {
+
             return (
               <tbody
                 className="mt-3"
@@ -109,7 +111,7 @@ function quotation() {
               >
                 <tr>
                   <td className="p-3">{data.orderID}</td>
-                  <td>{data.dateTime}</td>
+                  <td>{data.dateTime} </td>
                   <td>{data.userName}</td>
                   <td className="text-center">
                     {data.status === "Quotation successful" ? (
@@ -119,19 +121,27 @@ function quotation() {
                       >
                         Quotation successful
                       </span>
-                    ) : (
-                      <Link
-                        href={`/wholesaler/${data.storeID.trim()}/${data.id}`}
-                      >
-                        <button
-                          className="py-1 px-3 border-0"
-                          type="button"
-                          style={{ backgroundColor: "#F6C927" }}
+                    ) : data.status === "Quotation Reject" ? (
+                        <span
+                          className="py-1 px-3"
+                          style={{ backgroundColor: "#d16456" }}
                         >
-                          Wait for quotation detail
-                        </button>
-                      </Link>
-                    )}
+                          Reject Quotation
+                        </span>
+                    )
+                      : (
+                        <Link
+                          href={`/wholesaler/${data.storeID.trim()}/${data.id}`}
+                        >
+                          <button
+                            className="py-1 px-3 border-0"
+                            type="button"
+                            style={{ backgroundColor: "#F6C927" }}
+                          >
+                            Wait for quotation detail
+                          </button>
+                        </Link>
+                      )}
                   </td>
                   <td className="text-end p-3">{data.total}</td>
                   <td className="text-end p-3">

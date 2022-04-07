@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import {
   Navbar,
-  Alert,
   OverlayTrigger,
   Tooltip,
   FormControl,
@@ -23,10 +22,8 @@ import { connect } from "react-redux";
 import {
   getAuth,
   signOut,
-  firebase
 } from "firebase/auth";
 import { auth } from "../../firebase";
-import { async } from "@firebase/util";
 
 export const getStaticProps = async () => {
   const res = await fetch("http://localhost:8080/api/products");
@@ -44,33 +41,28 @@ function index(props) {
     var item = JSON.parse(window.localStorage.getItem("retailerInfo"));
     setUserInfo(item);
   }, []);
-  // var localitem = JSON.parse(window.localStorage.getItem("retailerInfo"));
-  // console.log("TESTTEST")
-  // console.log(localitem,"  local")
-  const logout = async () => {
-    try {
-      // const user = await signInWithEmailAndPassword(
-      //   auth,
-      //   loginEmail,
-      //   loginPassword
-      // );
-      // console.log(user);
-      // const currentUserIdentity = newData.find(
-      //   (item) => item.email === loginEmail
-      // );
-      // console.log(currentUserIdentity);
-      // setUserIdentity(currentUserIdentity);
-      // window.localStorage.setItem(
-      //   "wholesalerInfo",
-      //   JSON.stringify(currentUserIdentity)
-      // );
-      // setCurrentUser(true);
-      console.log("Test logout function");
-    } catch (error) {
-      alert(error.message);
-    }
-  };
-  console.log("hello")
+
+//   const logout = async () => {
+//     const [currentUser, setCurrentUser] = useState("");
+//     const auth = getAuth();
+//     signOut(auth).then(() => {
+//       window.localStorage.clear("retailerInfo");
+//       setCurrentUser(false)
+//     }).catch((error) => {
+//       console.error('> error : ', error);
+//     });
+//     console.log(currentUser);
+//   // function logOut({ ≈ }) {
+//   //   window.localStorage.clear("retailerInfo");
+//   //   setCurrentUser(false);
+//   // }; 
+
+//   // if (currentUser !== true) {
+//   //   const router = useRouter();
+//   //   router.push("/");
+//   // }
+// };
+
   return (
     <>
       <Navbar bg="light" expand="sm" className="py-4 px-2">
@@ -101,16 +93,10 @@ function index(props) {
                 className="ms-4"
                 style={{ width: "30px", height: "30px" }}
               />
-            {/* <Button
-            className="w-100 text-capitalize"
-            variant="dark"
-            type="button"
-            onClick={logout}
-            >
-            S
-          </Button> */}
-              {/* <button type="button" onClick={logout} style={{ marginTop: 0 }}>Sign Out</button> */}
-              <Link href={"/retailer/quotation-list"}>
+
+              {/* <button onClick={logout} style={{ marginTop: 0 }}>Sign out</button> */}
+            </div>
+            <Link href={"/retailer/quotation-list"}>
                 <button
                   className="py-2 px-6 btn mb-0 text-capitalize"
                   style={{ background: "#FFFFFF", border: "1px solid #535252" }}
@@ -118,10 +104,12 @@ function index(props) {
                   Go to Order
                 </button>
               </Link>
-            </div>
           </Navbar.Collapse>
         </Container>
       </Navbar>
+      {/* <p>{props.id}</p>
+      <p>{props.name}</p>
+      <p>{props.email}</p> */}
       <Carousel fade className="">
         <Carousel.Item className="max-height-vh-60">
           <img
@@ -246,7 +234,7 @@ function index(props) {
                   }}
                 >
                   <Card.Title>{data.Productname.substring(0,25)}...</Card.Title>
-
+                  <Card.Title>{data.Storename.substring(0,25)}</Card.Title>
 
                   <span>
                     <FontAwesomeIcon
